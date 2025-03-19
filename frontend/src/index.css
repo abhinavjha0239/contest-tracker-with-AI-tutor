@@ -1,0 +1,109 @@
+:root {
+  /* Modern Color Palette */
+  --primary-color: #2563eb;
+  --primary-color-dark: #1d4ed8;
+  --secondary-color: #10b981;
+  --accent-color: #f43f5e;
+  
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  
+  --card-bg: rgba(255, 255, 255, 0.95);
+  --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  --card-shadow-hover: 0 12px 48px rgba(0, 0, 0, 0.12);
+  
+  --header-bg: rgba(255, 255, 255, 0.8);
+  --body-bg: #f8fafc;
+  
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Platform Colors */
+  --codeforces: linear-gradient(135deg, #1e88e5, #1565c0);
+  --codechef: linear-gradient(135deg, #5c4033, #3e2723);
+  --leetcode: linear-gradient(135deg, #ffa116, #ff8a00);
+  --atcoder: linear-gradient(135deg, #222222, #000000);
+}
+
+[data-theme="dark"] {
+  --primary-color: #3b82f6;
+  --primary-color-dark: #2563eb;
+  --secondary-color: #10b981;
+  --accent-color: #f43f5e;
+  
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  
+  --card-bg: rgba(30, 41, 59, 0.95);
+  --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  --card-shadow-hover: 0 12px 48px rgba(0, 0, 0, 0.3);
+  
+  --header-bg: rgba(15, 23, 42, 0.8);
+  --body-bg: #0f172a;
+
+  /* Enhanced 3D effects for dark theme */
+  --card-glass-border: 1px solid rgba(255, 255, 255, 0.1);
+  --card-glass-highlight: rgba(255, 255, 255, 0.05);
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: var(--body-bg);
+  background-image: 
+    radial-gradient(at 40% 20%, rgba(37, 99, 235, 0.1) 0px, transparent 50%),
+    radial-gradient(at 80% 0%, rgba(16, 185, 129, 0.1) 0px, transparent 50%),
+    radial-gradient(at 0% 50%, rgba(244, 63, 94, 0.1) 0px, transparent 50%);
+  min-height: 100vh;
+  color: var(--text-primary);
+  transition: all 0.5s ease;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Add 3D glass morphism effect to all cards */
+.contest-card, .auth-card, .platform-section {
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: var(--card-glass-border) !important;
+  transform-style: preserve-3d !important;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.contest-card:hover, .auth-card:hover {
+  transform: translateY(-8px) translateZ(20px) !important;
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Enhance buttons with water-like ripple effects */
+button, .auth-button, .contest-link {
+  position: relative;
+  overflow: hidden;
+}
+
+button::after, .auth-button::after, .contest-link::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300%;
+  height: 300%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 60%);
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.8s ease-out, opacity 0.6s ease-out;
+}
+
+button:active::after, .auth-button:active::after, .contest-link:active::after {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+  transition: 0s;
+}

@@ -1,0 +1,222 @@
+.platform-filters-container {
+  background: rgba(var(--card-bg-rgb), 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 24px;
+  padding: 16px 24px;
+  margin-bottom: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.platform-filters-toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  padding: 8px 0;
+}
+
+.toggle-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.toggle-btn.open {
+  transform: rotate(-180deg);
+}
+
+.platform-filters-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              margin 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0;
+  margin-top: 0;
+}
+
+.platform-filters-container.open .platform-filters-content {
+  max-height: 500px;
+  opacity: 1;
+  margin-top: 24px;
+}
+
+.platform-filters-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.platform-filters-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.platform-filters-header h3::before {
+  content: '';
+  display: block;
+  width: 4px;
+  height: 20px;
+  background: var(--primary-color);
+  border-radius: 4px;
+}
+
+.platform-filters-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.filter-action-btn {
+  padding: 8px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filter-action-btn:hover {
+  background: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+  transform: translateY(-1px);
+}
+
+.platform-filters-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.platform-checkbox {
+  position: relative;
+  padding: 10px 20px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 160px;
+}
+
+.platform-checkbox:hover {
+  background: rgba(var(--primary-color-rgb), 0.1);
+  border-color: var(--platform-color);
+  transform: translateY(-2px);
+}
+
+.platform-checkbox input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.platform-checkbox input[type="checkbox"]:checked {
+  background: var(--platform-color);
+  border-color: var(--platform-color);
+}
+
+.platform-checkbox input[type="checkbox"]:checked::after {
+  content: '✓';
+  color: white;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.platform-name {
+  color: var(--text-primary);
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.platform-checkbox:hover .platform-name {
+  color: var(--platform-color);
+}
+
+/* Platform-specific colors on hover */
+.platform-checkbox[data-platform="Codeforces"]:hover {
+  background: rgba(30, 136, 229, 0.1);
+}
+
+.platform-checkbox[data-platform="CodeChef"]:hover {
+  background: rgba(92, 64, 51, 0.1);
+}
+
+.platform-checkbox[data-platform="LeetCode"]:hover {
+  background: rgba(255, 161, 22, 0.1);
+}
+
+.platform-checkbox[data-platform="AtCoder"]:hover {
+  background: rgba(34, 34, 34, 0.1);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .platform-filters-container {
+    padding: 12px 16px;
+    border-radius: 20px;
+  }
+
+  .platform-filters-list {
+    gap: 12px;
+  }
+
+  .platform-checkbox {
+    min-width: 140px;
+    padding: 8px 16px;
+  }
+  
+  .platform-filters-content {
+    max-height: 0;
+  }
+  
+  .platform-filters-container.open .platform-filters-content {
+    max-height: 800px; /* Increased for mobile layout */
+  }
+}

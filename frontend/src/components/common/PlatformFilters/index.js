@@ -1,0 +1,72 @@
+import React, { useState } from 'react';
+import { FaFilter, FaCheck, FaTimes, FaChevronDown } from 'react-icons/fa';
+import './PlatformFilters.css';
+import { getEnabledPlatforms } from '../../../utils/platforms';
+
+const PlatformFilters = ({ platforms, setPlatforms }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const enabledPlatforms = getEnabledPlatforms();
+
+  const handleSelectAll = () => {
+    setPlatforms(enabledPlatforms.map(p => p.name));
+  };
+
+  const handleClearAll = () => {
+    setPlatforms([]);
+  };
+
+  return (
+    <div className={`platform-filters-container ${isOpen ? 'open' : ''}`}>
+      <div className="platform-filters-toggle" onClick={() => setIsOpen(!isOpen)}>
+        <h3>
+          <FaFilter /> Filter Platforms
+        </h3>
+        <button className={`toggle-btn ${isOpen ? 'open' : ''}`}>
+          <FaChevronDown />
+        </button>
+      </div>
+      
+      <div className="platform-filters-content">
+        <div className="platform-filters-actions">
+          <button onClick={handleSelectAll} className="filter-action-btn">
+            <FaCheck /> Select All
+          </button>
+          <button onClick={handleClearAll} className="filter-action-btn">
+            <FaTimes /> Clear
+          </button>
+        </div>
+        <div className="platform-filters-list">
+          {enabledPlatforms.map(platform => (
+            <label 
+              key={platform.name} 
+              className="platform-checkbox"
+              data-platform={platform.name}
+              style={{
+                '--platform-color': platform.color,
+                '--primary-color-rgb': platform.name === 'Codeforces' ? '30, 136, 229' :
+                                     platform.name === 'CodeChef' ? '92, 64, 51' :
+                                     platform.name === 'LeetCode' ? '255, 161, 22' :
+                                     '34, 34, 34'
+              }}
+            >
+              <input
+                type="checkbox"
+                checked={platforms.includes(platform.name)}
+                onChange={e => {
+                  if (e.target.checked) {
+                    setPlatforms([...platforms, platform.name]);
+                  } else {
+                    setPlatforms(platforms.filter(p => p !== platform.name));
+                  }
+                }}
+              />
+              <span className="platform-name">{platform.displayName}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default PlatformFilters;
