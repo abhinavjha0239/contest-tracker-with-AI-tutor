@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useHistory } from 'react-router-dom';
 import ContestList from '../../components/common/ContestList';
 import PlatformFilters from '../../components/common/PlatformFilters';
 import { getEnabledPlatforms } from '../../utils/platforms';
@@ -12,6 +13,7 @@ const PastContests = ({ isAuthenticated }) => {
   const [platforms, setPlatforms] = useState(getEnabledPlatforms().map(p => p.name));
   const [page, setPage] = useState(1);
   const [pagination, setPagination] = useState({ total: 0, pages: 1 });
+  const history = useHistory();
 
   const fetchContests = React.useCallback(async () => {
     try {
@@ -35,11 +37,11 @@ const PastContests = ({ isAuthenticated }) => {
     } finally {
       setLoading(false);
     }
-  }, [platforms, page, isAuthenticated]); // Added dependencies for useCallback
+  }, [platforms, page, isAuthenticated]);
 
   useEffect(() => {
     fetchContests();
-  }, [platforms, page, fetchContests]); // Added fetchContests to dependency array
+  }, [platforms, page, fetchContests]);
 
   const toggleBookmark = async (contestId, isBookmarked) => {
     try {
@@ -55,6 +57,22 @@ const PastContests = ({ isAuthenticated }) => {
     }
   };
 
+  // Function to check if contest has ended
+  const hasContestEnded = (contest) => {
+    const now = new Date();
+    return new Date(contest.endTime) < now;
+  };
+
+  const handleViewVideos = (contestId, contest) => {
+    // Only navigate to videos page if contest has ended
+    if (hasContestEnded(contest)) {
+      history.push(`/contest/${contestId}/videos`);
+    } else {
+      // Optionally show a message that videos aren't available yet
+      alert('Solution videos will be available after the contest ends.');
+    }
+  };
+
   return (
     <div className="contests-container">
       <PlatformFilters platforms={platforms} setPlatforms={setPlatforms} />
@@ -65,6 +83,8 @@ const PastContests = ({ isAuthenticated }) => {
         toggleBookmark={toggleBookmark}
         loading={loading}
         error={error}
+        onViewVideos={handleViewVideos}
+        hasContestEnded={hasContestEnded}
       />
 
       {!loading && !error && contests.length > 0 && (

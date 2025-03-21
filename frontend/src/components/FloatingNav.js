@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FaCalendar, FaHistory, FaBookmark, FaMoon, FaSun } from 'react-icons/fa';
+import { FaCalendar, FaHistory, FaBookmark, FaMoon, FaSun, FaRobot } from 'react-icons/fa';
 import './FloatingNav.css';
 
 const NAV_ITEMS = [
@@ -20,6 +20,12 @@ const NAV_ITEMS = [
     name: "Bookmarks",
     path: "/bookmarks",
     icon: FaBookmark,
+    requiresAuth: true
+  },
+  {
+    name: "AI Tutor",
+    path: "/ai-tutor",
+    icon: FaRobot,
     requiresAuth: true
   }
 ];
@@ -57,7 +63,12 @@ const FloatingNav = ({ isAuthenticated, handleLogout, darkMode, toggleTheme }) =
           );
         })}
         
-        <button className="theme-toggle" onClick={toggleTheme}>
+        <button 
+          className="theme-toggle" 
+          onClick={toggleTheme}
+          aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
+          title={darkMode ? "Switch to light mode" : "Switch to dark mode"}
+        >
           {darkMode ? <FaSun /> : <FaMoon />}
         </button>
         

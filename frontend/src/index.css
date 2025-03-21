@@ -52,14 +52,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: var(--body-bg);
-  background-image: 
-    radial-gradient(at 40% 20%, rgba(37, 99, 235, 0.1) 0px, transparent 50%),
-    radial-gradient(at 80% 0%, rgba(16, 185, 129, 0.1) 0px, transparent 50%),
-    radial-gradient(at 0% 50%, rgba(244, 63, 94, 0.1) 0px, transparent 50%);
   min-height: 100vh;
   color: var(--text-primary);
-  transition: all 0.5s ease;
 }
 
 code {
@@ -74,6 +68,26 @@ code {
   border: var(--card-glass-border) !important;
   transform-style: preserve-3d !important;
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.contest-card::before, .auth-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  transform: rotate(30deg);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.contest-card:hover::before, .auth-card:hover::before {
+  opacity: 1;
 }
 
 .contest-card:hover, .auth-card:hover {
@@ -83,7 +97,7 @@ code {
     0 0 0 1px rgba(255, 255, 255, 0.1) !important;
 }
 
-/* Enhance buttons with water-like ripple effects */
+/* Fix enhanced button effects to prevent crashes */
 button, .auth-button, .contest-link {
   position: relative;
   overflow: hidden;
@@ -94,16 +108,53 @@ button::after, .auth-button::after, .contest-link::after {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 300%;
-  height: 300%;
+  width: 200%; /* Reduced from 300% to prevent overflow issues */
+  height: 200%; /* Reduced from 300% to prevent overflow issues */
   background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 60%);
   opacity: 0;
   transform: translate(-50%, -50%) scale(0);
   transition: transform 0.8s ease-out, opacity 0.6s ease-out;
+  pointer-events: none; /* Ensure the pseudo-element doesn't interfere with clicks */
+  z-index: 0; /* Keep below content */
 }
 
 button:active::after, .auth-button:active::after, .contest-link:active::after {
   opacity: 1;
   transform: translate(-50%, -50%) scale(1);
   transition: 0s;
+}
+
+/* Disable effects for specific buttons to prevent conflicts */
+.contest-card .contest-link::after,
+.view-toggle button::after,
+.pagination button::after {
+  display: none;
+}
+
+/* Add floating animation to bubbles */
+.water-bubble {
+  position: absolute;
+  background: radial-gradient(circle at center, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.15) 100%);
+  border-radius: 50%;
+  bottom: -100px;
+  animation: bubble-rise linear forwards;
+  opacity: 0.5;
+  z-index: -1;
+}
+
+@keyframes bubble-rise {
+  0% {
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.8;
+  }
+  90% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(-1000px) translateX(calc(sin(var(--random-offset, 0deg)) * 100px));
+    opacity: 0;
+  }
 }

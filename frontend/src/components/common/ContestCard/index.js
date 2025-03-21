@@ -1,10 +1,18 @@
 // src/components/ContestCard.js
 import React from 'react';
 import moment from 'moment';
-import { FaBookmark, FaRegBookmark, FaYoutube } from 'react-icons/fa';
+import { FaBookmark, FaRegBookmark, FaYoutube, FaCalendar } from 'react-icons/fa';
+import { createGoogleCalendarUrl } from '../../../utils/calendarUtils';
 import './ContestCard.css';
 
-const ContestCard = ({ contest, type, isAuthenticated, toggleBookmark }) => {
+const ContestCard = ({ 
+  contest, 
+  type, 
+  isAuthenticated, 
+  toggleBookmark,
+  onViewVideos,
+  hasContestEnded 
+}) => {
   const { _id, name, platform, startTime, endTime, duration, url, youtubeLink, bookmarked } = contest;
   
   // Convert UTC to IST and format
@@ -48,10 +56,14 @@ const ContestCard = ({ contest, type, isAuthenticated, toggleBookmark }) => {
         {isAuthenticated && (
           <button 
             className={`bookmark-button ${bookmarked ? 'active' : ''}`}
-            onClick={() => toggleBookmark(_id, bookmarked)}
-            title={bookmarked ? 'Remove bookmark' : 'Add bookmark'}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              toggleBookmark(_id, bookmarked);
+            }}
+            aria-label={bookmarked ? "Remove bookmark" : "Add bookmark"}
           >
-            {bookmarked ? <FaBookmark size={20} /> : <FaRegBookmark size={20} />}
+            {bookmarked ? <FaBookmark /> : <FaRegBookmark />}
           </button>
         )}
       </div>
@@ -93,6 +105,28 @@ const ContestCard = ({ contest, type, isAuthenticated, toggleBookmark }) => {
         >
           View Contest
         </a>
+        
+        {/* Add Videos button for past contests if contest has ended */}
+        {type === 'past' && hasContestEnded && hasContestEnded(contest) && (
+          <button 
+            className="contest-link videos-link" 
+            onClick={() => onViewVideos(_id, contest)}
+          >
+            Videos
+          </button>
+        )}
+        
+        {type === 'upcoming' && (
+          <a
+            href={createGoogleCalendarUrl(contest)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="calendar-link"
+            title="Add to Google Calendar"
+          >
+            <FaCalendar /> Add Reminder
+          </a>
+        )}
         
         {youtubeLink && (
           <a 

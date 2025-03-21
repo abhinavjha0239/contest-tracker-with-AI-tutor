@@ -12,13 +12,19 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.409.0",
+    "@aws-sdk/s3-request-presigner": "^3.409.0",
+    "@google/generative-ai": "^0.1.3",
     "axios": "^1.8.3",
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "googleapis": "^128.0.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.12.1",
+    "multer": "^1.4.5-lts.1",
+    "multer-s3": "^3.0.1",
     "node-cron": "^3.0.3"
   },
   "devDependencies": {

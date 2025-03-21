@@ -7,6 +7,7 @@ const axios = require('axios');
 const connectDB = require('./config/db');
 const Contest = require('./models/Contest');
 const { platforms, getPlatformByResourceId } = require('./config/platforms');
+const youtubeService = require('./services/youtubeService');
 
 // Connect to database
 connectDB();
@@ -28,7 +29,13 @@ const resetCollection = async () => {
 };
 
 // Middleware
-app.use(cors());
+// Enhance CORS configuration to ensure frontend can connect
+app.use(cors({
+  origin: ['http://localhost:3000', 'http://localhost:5173'], // Add any frontend origins
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 
 // Define routes
@@ -36,6 +43,41 @@ app.use('/api/auth', require('./routes/auth'));
 app.use('/api/contests', require('./routes/contests'));
 app.use('/api/bookmarks', require('./routes/bookmarks'));
 app.use('/api/admin', require('./routes/admin'));
+
+// Register calendar routes
+app.use('/api/calendar', require('./routes/calendar'));
+
+// Clear require cache to ensure fresh module loading
+delete require.cache[require.resolve('./routes/aitutor.routes')];
+
+// Register AI tutor routes with explicit path
+const aitutor = require('./routes/aitutor.routes');
+app.use('/api/aitutor', aitutor);
+
+// Register the specific route explicitly as a backup
+app.post('/api/aitutor/chat-file', aitutor);
+
+// Add test route to verify server is running
+app.get('/api/test', (req, res) => {
+  res.json({ msg: 'API is working' });
+});
+
+// Check YouTube API health at startup with proper error handling
+if (typeof youtubeService.checkYouTubeAPIHealth === 'function') {
+  youtubeService.checkYouTubeAPIHealth()
+    .then(isHealthy => {
+      if (isHealthy) {
+        console.log('YouTube API is healthy and available.');
+      } else {
+        console.warn('YouTube API key validation failed. Video features may not work correctly.');
+      }
+    })
+    .catch(err => {
+      console.error('Error checking YouTube API health:', err.message);
+    });
+} else {
+  console.warn('YouTube API health check function is not available. Video features may not work correctly.');
+}
 
 // Function to fetch contests from clist.by API
 const fetchContests = async () => {
@@ -92,6 +134,13 @@ const fetchContests = async () => {
       };
 
       if (existing) {
+        // Preserve existing questions and youtubeLink when updating
+        if (existing.questions && existing.questions.length > 0) {
+          contestData.questions = existing.questions;
+        }
+        if (existing.youtubeLink) {
+          contestData.youtubeLink = existing.youtubeLink;
+        }
         await Contest.findByIdAndUpdate(existing._id, contestData);
       } else {
         await new Contest(contestData).save();
@@ -111,7 +160,8 @@ cron.schedule('0 * * * *', fetchContests);
 
 // Run reset and initial fetch
 (async () => {
-  await resetCollection();
+  // Comment out the reset for production to avoid data loss
+  // await resetCollection();
   await fetchContests();
 })();
 

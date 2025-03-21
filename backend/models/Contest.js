@@ -43,6 +43,56 @@ const ContestSchema = new mongoose.Schema({
   },
   youtubeLink: {
     type: String
+  },
+  calendarEventId: {
+    type: String,
+    sparse: true  // Allow null/undefined values
+  },
+  questions: [{
+    questionId: { type: String, required: true },
+    title: { type: String, required: true },
+    filePath: { type: String },
+    s3Key: { type: String },
+  }],
+  videoId: {
+    type: String,
+    default: null
+  },
+  videoTitle: {
+    type: String,
+    default: null
+  },
+  videoThumbnail: {
+    type: String,
+    default: null
+  },
+  channelTitle: {
+    type: String,
+    default: null
+  },
+  videoChecked: {
+    type: Boolean,
+    default: false
+  },
+  // Add fields for storing multiple videos
+  videos: [{
+    id: String,
+    title: String,
+    channelId: String,
+    channelTitle: String,
+    publishedAt: String,
+    thumbnail: String,
+    platformExpert: Boolean,
+    score: Number,
+    fromOfficialPlaylist: Boolean
+  }],
+  videosChecked: {
+    type: Boolean,
+    default: false
+  },
+  videosLastChecked: {
+    type: Date,
+    default: null
   }
 });
 

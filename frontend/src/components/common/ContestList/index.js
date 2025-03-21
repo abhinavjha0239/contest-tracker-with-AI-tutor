@@ -1,10 +1,19 @@
 import React, { useState } from 'react';
 import ContestCard from '../ContestCard';
-import { FaList, FaThLarge, FaColumns } from 'react-icons/fa';
+import { FaThLarge, FaColumns } from 'react-icons/fa';
 import './ContestList.css';
 
-const ContestList = ({ contests, type, isAuthenticated, toggleBookmark, loading, error }) => {
-  const [viewMode, setViewMode] = useState('grid'); // 'list', 'grid', 'platform'
+const ContestList = ({ 
+  contests, 
+  type, 
+  isAuthenticated, 
+  toggleBookmark, 
+  loading, 
+  error,
+  onViewVideos,        
+  hasContestEnded      
+}) => {
+  const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'platform'
 
   if (loading) {
     return <div className="contest-list-message">Loading contests...</div>;
@@ -45,6 +54,8 @@ const ContestList = ({ contests, type, isAuthenticated, toggleBookmark, loading,
                     type={type}
                     isAuthenticated={isAuthenticated}
                     toggleBookmark={toggleBookmark}
+                    onViewVideos={onViewVideos}
+                    hasContestEnded={hasContestEnded}
                   />
                 ))
               ) : (
@@ -60,13 +71,6 @@ const ContestList = ({ contests, type, isAuthenticated, toggleBookmark, loading,
   return (
     <div className="contest-list-container">
       <div className="view-toggle">
-        <button 
-          className={viewMode === 'list' ? 'active' : ''} 
-          onClick={() => setViewMode('list')}
-          title="List View"
-        >
-          <FaList />
-        </button>
         <button 
           className={viewMode === 'grid' ? 'active' : ''} 
           onClick={() => setViewMode('grid')}
@@ -86,7 +90,7 @@ const ContestList = ({ contests, type, isAuthenticated, toggleBookmark, loading,
       {viewMode === 'platform' ? (
         renderPlatformView()
       ) : (
-        <div className={`contest-${viewMode}`}>
+        <div className="contest-grid">
           {contests.map(contest => (
             <ContestCard
               key={contest._id}
@@ -94,6 +98,8 @@ const ContestList = ({ contests, type, isAuthenticated, toggleBookmark, loading,
               type={type}
               isAuthenticated={isAuthenticated}
               toggleBookmark={toggleBookmark}
+              onViewVideos={onViewVideos}
+              hasContestEnded={hasContestEnded}
             />
           ))}
         </div>

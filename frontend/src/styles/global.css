@@ -1,3 +1,89 @@
+:root {
+  --transition-duration: 0.3s;
+}
+
+/* Light mode is default */
+:root {
+  --background-primary: #ffffff;
+  --background-secondary: #f5f5f5;
+  --card-background: #ffffff;
+  --text-primary: #121212;
+  --text-secondary: #666666;
+  --accent-color: #1a73e8;
+  --primary-color: #1a73e8;
+  --secondary-color: #0d47a1;
+  --error-color: #b00020;
+  --border-color: #e0e0e0;
+  --hover-color: rgba(26, 115, 232, 0.1);
+  --glow-color: rgba(26, 115, 232, 0.4);
+  --button-gradient: linear-gradient(135deg, #1a73e8, #0d47a1);
+}
+
+/* Dark mode overrides */
+[data-theme='dark'] {
+  --background-primary: #121212;
+  --background-secondary: #1e1e1e;
+  --card-background: #242424;
+  --text-primary: #ffffff;
+  --text-secondary: #e0e0e0;
+  --accent-color: #bb86fc;
+  --primary-color: #bb86fc;
+  --secondary-color: #03dac6;
+  --error-color: #cf6679;
+  --border-color: #333333;
+  --hover-color: rgba(187, 134, 252, 0.1);
+  --glow-color: rgba(187, 134, 252, 0.4);
+  --button-gradient: linear-gradient(135deg, #bb86fc, #03dac6);
+}
+
+/* Essential background fixes */
+html, body, #root, .App {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  width: 100%;
+  background-color: var(--background-primary);
+  transition: background-color var(--transition-duration) ease;
+}
+
+body {
+  background-image: 
+    radial-gradient(at 40% 20%, rgba(37, 99, 235, 0.15) 0px, transparent 50%),
+    radial-gradient(at 80% 0%, rgba(16, 185, 129, 0.15) 0px, transparent 50%),
+    radial-gradient(at 0% 50%, rgba(244, 63, 94, 0.15) 0px, transparent 50%),
+    radial-gradient(at 80% 90%, rgba(124, 58, 237, 0.15) 0px, transparent 50%);
+  background-size: 200% 200%;
+  animation: gradientMovement 15s ease infinite;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: var(--text-primary);
+  transition: all 0.5s ease;
+}
+
+@keyframes gradientMovement {
+  0% { background-position: 0% 50% }
+  50% { background-position: 100% 50% }
+  100% { background-position: 0% 50% }
+}
+
+#root {
+  background: transparent;
+}
+
+.App {
+  background: transparent;
+}
+
+.main-content {
+  background: transparent;
+  min-height: 100vh;
+  width: 100%;
+  transition: background-color var(--transition-duration) ease;
+}
+
 .page-container {
   max-width: 1200px;
   margin: 0 auto;
@@ -8,10 +94,18 @@
   font-size: 2.5rem;
   font-weight: 700;
   margin-bottom: 2rem;
-  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  background: var(--button-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   text-align: center;
+  position: relative;
+  text-shadow: 0 0 80px var(--glow-color);
+  animation: title-glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes title-glow {
+  from { text-shadow: 0 0 10px var(--glow-color); }
+  to { text-shadow: 0 0 20px var(--glow-color); }
 }
 
 .error-message {
@@ -28,4 +122,107 @@
   justify-content: center;
   align-items: center;
   min-height: 200px;
+}
+
+/* Common styles */
+.card, 
+.container,
+.navbar,
+.auth-card,
+.modal {
+  background-color: var(--card-background);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.card:hover, 
+.auth-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+  border-color: var(--primary-color);
+}
+
+button, 
+input, 
+textarea,
+select {
+  background-color: var(--background-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Fix button hover effects to prevent crashes */
+button {
+  background: var(--button-gradient);
+  color: white;
+  border: none;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* Fix the shimmer effect to use more stable positioning */
+button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: 0.5s;
+  z-index: -1;
+  pointer-events: none; /* Prevent interaction with pseudo-element */
+}
+
+button:hover::before {
+  left: 100%;
+}
+
+/* Reset ripple effect to prevent conflicts */
+button::after, .auth-button::after, .contest-link::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300%;
+  height: 300%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 60%);
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.8s ease-out, opacity 0.6s ease-out;
+  pointer-events: none; /* Prevent interaction with pseudo-element */
+}
+
+/* Ensure button styles in specific contexts don't conflict */
+.contests-container button, 
+.contest-list-container button,
+.view-toggle button {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+}
+
+/* Reset any conflicting styles for specific components */
+.view-toggle button::before,
+.view-toggle button::after,
+.pagination button::before,
+.pagination button::after {
+  display: none; /* Disable effects for these specific buttons */
+}
+
+a {
+  color: var(--primary-color);
+  transition: color var(--transition-duration);
+}
+
+a:hover {
+  color: var(--secondary-color);
 }

@@ -95,6 +95,35 @@ router.post('/login', async (req, res) => {
   }
 });
 
+// @route   POST /api/auth/logout
+// @desc    Logout user (client-side handled)
+// @access  Public
+router.post('/logout', (req, res) => {
+  // Since JWT is stateless, the actual logout happens on client-side
+  // by removing the token from localStorage
+  
+  // You could implement token blacklisting for additional security
+  // This would require a token blacklist in your database
+  
+  res.json({ msg: 'Logged out successfully' });
+});
+
+// @route   GET /api/auth/verify
+// @desc    Verify token and return user data
+// @access  Private
+router.get('/verify', authenticate, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select('-password');
+    if (!user) {
+      return res.status(404).json({ msg: 'User not found', isValid: false });
+    }
+    res.json({ isValid: true, user });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ msg: 'Server error', isValid: false });
+  }
+});
+
 // @route   GET /api/auth/me
 // @desc    Get current user
 // @access  Private

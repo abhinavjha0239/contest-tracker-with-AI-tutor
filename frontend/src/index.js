@@ -1,8 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './styles/global.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+
+// Apply theme from localStorage before render to prevent flash
+const savedTheme = localStorage.getItem('theme') || 'dark';
+document.documentElement.setAttribute('data-theme', savedTheme);
+document.body.setAttribute('data-theme', savedTheme);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

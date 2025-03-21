@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FaCalendar, FaHistory, FaBookmark, FaMoon, FaSun, FaBars, FaTimes, FaUser } from 'react-icons/fa';
+import { FaCalendar, FaHistory, FaBookmark, FaMoon, FaSun, FaBars, FaTimes, FaUser, FaRobot } from 'react-icons/fa';
 import './BubbleNav.css';
 
 const NAV_ITEMS = [
@@ -23,6 +23,13 @@ const NAV_ITEMS = [
     path: "/bookmarks",
     icon: FaBookmark,
     color: "var(--accent-color)",
+    requiresAuth: true
+  },
+  {
+    name: "AI Tutor",
+    path: "/ai-tutor",
+    icon: FaRobot,
+    color: "#805ad5",
     requiresAuth: true
   }
 ];
@@ -96,6 +103,8 @@ const BubbleNav = ({ isAuthenticated, handleLogout, darkMode, toggleTheme }) => 
         <button 
           className="bubble-item theme-bubble" 
           onClick={toggleTheme}
+          aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
+          title={darkMode ? "Switch to light mode" : "Switch to dark mode"}
           style={{ '--bubble-color': '#805ad5' }}
         >
           <div className="bubble-icon">
@@ -107,7 +116,10 @@ const BubbleNav = ({ isAuthenticated, handleLogout, darkMode, toggleTheme }) => 
         {isAuthenticated ? (
           <button 
             className="bubble-item auth-bubble" 
-            onClick={handleLogout}
+            onClick={() => {
+              handleLogout(); // Use the App.js logout handler instead of local function
+              setIsOpen(false);
+            }}
             style={{ '--bubble-color': '#e53e3e' }}
           >
             <div className="bubble-icon"><FaUser /></div>
@@ -118,6 +130,7 @@ const BubbleNav = ({ isAuthenticated, handleLogout, darkMode, toggleTheme }) => 
             to="/login" 
             className="bubble-item auth-bubble"
             style={{ '--bubble-color': '#38a169' }}
+            onClick={() => setIsOpen(false)}
           >
             <div className="bubble-icon"><FaUser /></div>
             <span className="bubble-label">Login</span>
