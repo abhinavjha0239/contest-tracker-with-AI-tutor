@@ -1,7 +1,7 @@
 // src/components/ContestCard.js
 import React from 'react';
 import moment from 'moment';
-import { FaBookmark, FaRegBookmark, FaYoutube, FaCalendar } from 'react-icons/fa';
+import { FaBookmark, FaRegBookmark, FaYoutube, FaCalendar, FaGraduationCap } from 'react-icons/fa';
 import { createGoogleCalendarUrl } from '../../../utils/calendarUtils';
 import './ContestCard.css';
 
@@ -11,6 +11,7 @@ const ContestCard = ({
   isAuthenticated, 
   toggleBookmark,
   onViewVideos,
+  onViewTutor,
   hasContestEnded 
 }) => {
   const { _id, name, platform, startTime, endTime, duration, url, youtubeLink, bookmarked } = contest;
@@ -108,12 +109,21 @@ const ContestCard = ({
         
         {/* Add Videos button for past contests if contest has ended */}
         {type === 'past' && hasContestEnded && hasContestEnded(contest) && (
-          <button 
-            className="contest-link videos-link" 
-            onClick={() => onViewVideos(_id, contest)}
-          >
-            Videos
-          </button>
+          <>
+            <button 
+              className="contest-link videos-link" 
+              onClick={() => onViewVideos(_id, contest)}
+            >
+              Videos
+            </button>
+            
+            <button 
+              className="contest-link tutor-link" 
+              onClick={() => onViewTutor(_id, contest)}
+            >
+              <FaGraduationCap /> Tutor
+            </button>
+          </>
         )}
         
         {type === 'upcoming' && (

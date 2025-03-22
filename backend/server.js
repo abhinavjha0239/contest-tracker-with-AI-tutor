@@ -8,6 +8,7 @@ const connectDB = require('./config/db');
 const Contest = require('./models/Contest');
 const { platforms, getPlatformByResourceId } = require('./config/platforms');
 const youtubeService = require('./services/youtubeService');
+const { authenticate } = require('./middleware/auth'); // Add this import
 
 // Connect to database
 connectDB();
@@ -50,16 +51,48 @@ app.use('/api/calendar', require('./routes/calendar'));
 // Clear require cache to ensure fresh module loading
 delete require.cache[require.resolve('./routes/aitutor.routes')];
 
-// Register AI tutor routes with explicit path
+// Register AI tutor routes with explicit path - make sure it's consistent with the frontend calls
 const aitutor = require('./routes/aitutor.routes');
-app.use('/api/aitutor', aitutor);
+
+// Register with both ai-tutor and aitutor paths for compatibility
+app.use('/api/ai-tutor', aitutor);
+app.use('/api/aitutor', aitutor);  // Add this line for backward compatibility
 
 // Register the specific route explicitly as a backup
-app.post('/api/aitutor/chat-file', aitutor);
+app.post('/api/ai-tutor/chat-file', aitutor);
+app.post('/api/aitutor/chat-file', aitutor);  // Add this line for backward compatibility
 
 // Add test route to verify server is running
 app.get('/api/test', (req, res) => {
   res.json({ msg: 'API is working' });
+});
+
+// Route to serve question files
+app.get('/api/ai-tutor/question-file/:questionId', authenticate, async (req, res) => {
+  try {
+    const { questionId } = req.params;
+    
+    // Find contest with this question
+    const contest = await Contest.findOne({
+      "questions.questionId": questionId
+    });
+    
+    if (!contest) {
+      return res.status(404).send('Contest not found for this question');
+    }
+    
+    const question = contest.questions.find(q => q.questionId === questionId);
+    
+    if (!question || !question.filePath) {
+      return res.status(404).send('Question file not found');
+    }
+    
+    // Redirect to the file URL
+    res.redirect(question.filePath);
+  } catch (err) {
+    console.error('Error serving question file:', err.message);
+    res.status(500).send('Server error');
+  }
 });
 
 // Check YouTube API health at startup with proper error handling

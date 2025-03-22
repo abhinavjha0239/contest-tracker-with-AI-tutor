@@ -73,6 +73,16 @@ const PastContests = ({ isAuthenticated }) => {
     }
   };
 
+  const handleViewTutor = (contestId, contest) => {
+    // Only navigate to tutor page if contest has ended
+    if (hasContestEnded(contest)) {
+      history.push(`/contest/${contestId}/questions`);
+    } else {
+      // Optionally show a message that tutor isn't available yet
+      alert('The tutor feature will be available after the contest ends.');
+    }
+  };
+
   return (
     <div className="contests-container">
       <PlatformFilters platforms={platforms} setPlatforms={setPlatforms} />
@@ -84,6 +94,7 @@ const PastContests = ({ isAuthenticated }) => {
         loading={loading}
         error={error}
         onViewVideos={handleViewVideos}
+        onViewTutor={handleViewTutor}
         hasContestEnded={hasContestEnded}
       />
 

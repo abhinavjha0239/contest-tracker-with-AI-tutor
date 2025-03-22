@@ -28,16 +28,20 @@
   gap: 10px;
 }
 
+/* Update question item styles */
 .question-item {
   padding: 12px;
   border-radius: 8px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   background: rgba(255, 255, 255, 0.05);
+  margin-bottom: 8px;
+  border: 1px solid transparent;
 }
 
 .question-item:hover {
   background: rgba(var(--primary-color-rgb), 0.1);
+  border-color: var(--primary-color);
 }
 
 .question-item.active {
@@ -45,6 +49,15 @@
   color: white;
 }
 
+/* Remove unnecessary styles */
+.question-actions,
+.view-question-button,
+.upload-button,
+.has-answer-badge {
+  display: none;
+}
+
+/* Update question content area */
 .question-content {
   background: var(--card-bg);
   border-radius: 12px;
@@ -52,6 +65,8 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(12px);
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .no-question-selected {
@@ -63,6 +78,205 @@
   font-style: italic;
 }
 
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.upload-modal {
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 20px;
+  width: 90%;
+  max-width: 500px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+}
+
+.upload-form {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.upload-form input[type="file"] {
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.cancel-button {
+  padding: 8px 16px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.upload-submit-button {
+  padding: 8px 16px;
+  background: #6c5ce7;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+}
+
+.upload-submit-button:disabled {
+  background: #a29bfe;
+  cursor: not-allowed;
+}
+
+.question-details {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.question-details h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: var(--primary-color);
+}
+
+.question-file {
+  margin-top: 10px;
+}
+
+.question-file a {
+  color: var(--primary-color);
+  text-decoration: underline;
+}
+
+.no-question-file {
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.close-button:hover {
+  color: var(--text-primary);
+}
+
+.contest-name {
+  font-size: 0.9rem;
+  margin-bottom: 15px;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 70vh;
+  gap: 20px;
+  padding: 20px;
+}
+
+.error-message {
+  color: #e74c3c;
+  text-align: center;
+  background: rgba(231, 76, 60, 0.1);
+  padding: 15px 20px;
+  border-radius: 8px;
+  border: 1px solid rgba(231, 76, 60, 0.3);
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.retry-button {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.retry-button:hover {
+  background: var(--primary-color-dark);
+}
+
+.upload-section {
+  margin-bottom: 20px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.add-question-button {
+  width: 100%;
+  background: var(--accent-color);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.add-question-button:hover {
+  background: var(--accent-color-dark);
+}
+
+.no-questions-message {
+  text-align: center;
+  color: var(--text-secondary);
+  font-style: italic;
+  padding: 10px;
+  margin-top: 10px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  margin-bottom: 5px;
+  color: var(--text-secondary);
+}
+
+.form-group input[type="text"] {
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+}
+
+/* Responsive adjustments for mobile */
 @media (max-width: 768px) {
   .contest-questions-container {
     grid-template-columns: 1fr;
@@ -73,5 +287,19 @@
     height: auto;
     max-height: 300px;
     overflow-y: auto;
+  }
+
+  .question-actions {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  
+  .action-button {
+    flex: 1;
+  }
+  
+  .upload-modal {
+    width: 95%;
+    padding: 15px;
   }
 }

@@ -11,6 +11,7 @@ const ContestList = ({
   loading, 
   error,
   onViewVideos,        
+  onViewTutor,
   hasContestEnded      
 }) => {
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'platform'
@@ -55,6 +56,7 @@ const ContestList = ({
                     isAuthenticated={isAuthenticated}
                     toggleBookmark={toggleBookmark}
                     onViewVideos={onViewVideos}
+                    onViewTutor={onViewTutor}
                     hasContestEnded={hasContestEnded}
                   />
                 ))
@@ -99,6 +101,7 @@ const ContestList = ({
               isAuthenticated={isAuthenticated}
               toggleBookmark={toggleBookmark}
               onViewVideos={onViewVideos}
+              onViewTutor={onViewTutor}
               hasContestEnded={hasContestEnded}
             />
           ))}

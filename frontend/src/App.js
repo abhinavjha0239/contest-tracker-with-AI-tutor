@@ -162,7 +162,16 @@ function App() {
               )}
             </Route>
             
+            {/* Support both URL patterns for contest questions */}
             <Route path="/ai-tutor/contest/:contestId">
+              {isAuthenticated ? (
+                <ContestQuestions />
+              ) : (
+                <Redirect to="/login" />
+              )}
+            </Route>
+            
+            <Route path="/contest/:contestId/questions">
               {isAuthenticated ? (
                 <ContestQuestions />
               ) : (

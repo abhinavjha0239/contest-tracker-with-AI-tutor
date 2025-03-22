@@ -46,6 +46,25 @@
   background: #2d3748;
 }
 
+/* Tutor button styling */
+.tutor-link {
+  background: #6c5ce7;
+  color: white;
+  cursor: pointer;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.tutor-link:hover {
+  background: #5649c0;
+}
+
+.tutor-link svg {
+  margin-right: 5px;
+}
+
 .bookmark-button {
   background: none;
   border: none;

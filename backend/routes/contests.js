@@ -256,4 +256,43 @@ router.post('/update-videos', authenticate, async (req, res) => {
   }
 });
 
+// @route   GET /api/contests/:contestId
+// @desc    Get a contest by ID
+// @access  Public
+router.get('/:contestId', async (req, res) => {
+  try {
+    const contest = await Contest.findById(req.params.contestId);
+    
+    if (!contest) {
+      return res.status(404).json({ msg: 'Contest not found' });
+    }
+    
+    // Check for authentication to return bookmark status
+    let isBookmarked = false;
+    const authHeader = req.header('Authorization');
+    
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      try {
+        const decoded = jwt.verify(authHeader.replace('Bearer ', ''), process.env.JWT_SECRET);
+        const user = await User.findById(decoded.id);
+        if (user) {
+          isBookmarked = user.bookmarkedContests.some(id => id.toString() === contest._id.toString());
+        }
+      } catch (err) {
+        // Token error, continue without bookmark info
+      }
+    }
+    
+    const contestWithBookmark = {
+      ...contest.toObject(),
+      bookmarked: isBookmarked
+    };
+    
+    res.json(contestWithBookmark);
+  } catch (err) {
+    console.error(`Error fetching contest: ${err.message}`);
+    res.status(500).json({ msg: 'Server error' });
+  }
+});
+
 module.exports = router;

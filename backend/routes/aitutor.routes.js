@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
 const Contest = require('../models/Contest');
 const { authenticate } = require('../middleware/auth');
 const { getAIResponse, getS3FileContent } = require('../services/geminiService');
@@ -41,16 +42,29 @@ router.get('/past-contests', authenticate, async (req, res) => {
 router.get('/contest/:contestId/questions', authenticate, async (req, res) => {
   try {
     const { contestId } = req.params;
+    console.log(`Fetching questions for contest ID: ${contestId}`);
+    
+    if (!mongoose.Types.ObjectId.isValid(contestId)) {
+      return res.status(400).json({ msg: 'Invalid contest ID format' });
+    }
+    
     const contest = await Contest.findById(contestId).select('questions');
     
     if (!contest) {
+      console.log(`Contest not found with ID: ${contestId}`);
       return res.status(404).json({ msg: 'Contest not found' });
     }
     
+    if (!contest.questions || contest.questions.length === 0) {
+      console.log(`No questions found for contest ID: ${contestId}`);
+      return res.json([]);
+    }
+    
+    console.log(`Found ${contest.questions.length} questions for contest ID: ${contestId}`);
     res.json(contest.questions);
   } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server error');
+    console.error(`Error fetching questions: ${err.message}`);
+    res.status(500).json({ msg: 'Server error', details: err.message });
   }
 });
 
@@ -70,27 +84,46 @@ router.post('/chat', authenticate, async (req, res) => {
   const { contestId, questionId, message, sessionId: clientSessionId } = req.body;
 
   try {
-    // Validate required fields
+    console.log('Chat request received with data:', {
+      contestId,
+      questionId,
+      messageLength: message?.length,
+      sessionId: clientSessionId
+    });
+
     if (!contestId || !questionId || !message) {
-      return res.status(400).json({ 
-        msg: 'Missing required fields', 
-        details: 'contestId, questionId, and message are required' 
+      return res.status(400).json({
+        msg: 'Missing required fields',
+        details: { contestId, questionId, messageProvided: !!message }
       });
     }
 
-    if (!message.trim()) {
-      return res.status(400).json({ msg: 'Message cannot be empty' });
-    }
-
-    // Find the contest and question
     const contest = await Contest.findById(contestId);
     if (!contest) {
       return res.status(404).json({ msg: 'Contest not found' });
     }
 
-    const question = contest.questions.find(q => q.questionId === questionId);
+    // Log all questions in contest for debugging
+    console.log('Available questions in contest:', 
+      contest.questions.map(q => ({
+        id: q.questionId,
+        title: q.title
+      }))
+    );
+
+    const question = contest.questions.find(q => 
+      q.questionId === questionId || 
+      q._id.toString() === questionId
+    );
+
     if (!question) {
-      return res.status(404).json({ msg: 'Question not found' });
+      return res.status(404).json({
+        msg: 'Question not found in this contest',
+        details: {
+          availableQuestions: contest.questions.map(q => q.questionId),
+          requestedId: questionId
+        }
+      });
     }
 
     try {
@@ -99,14 +132,32 @@ router.post('/chat', authenticate, async (req, res) => {
       if (question.s3Key) {
         questionContent = await getS3FileContent(question.s3Key);
       }
+      
+      // Get answer content from S3 if available
+      let answerContent = '';
+      if (question.answerS3Key) {
+        try {
+          answerContent = await getS3FileContent(question.answerS3Key);
+          console.log(`Found answer for question ${questionId}, length: ${answerContent.length}`);
+        } catch (answerErr) {
+          console.error('Error getting answer content:', answerErr);
+          // Continue without answer if there's an error
+        }
+      }
 
       // Generate a consistent sessionId for this question
       const sessionId = clientSessionId || `question_${contestId}_${questionId}`;
       
+      // Prepare context with both question and answer (if available)
+      let fullContext = questionContent;
+      if (answerContent) {
+        fullContext += "\n\nReference Solution:\n" + answerContent;
+      }
+      
       // Get AI response
       const aiResponse = await getAIResponse(
         question.title,
-        questionContent,
+        fullContext,
         message,
         [],              // Empty history since we're using sessionId
         sessionId        // Session ID to maintain context
@@ -115,7 +166,8 @@ router.post('/chat', authenticate, async (req, res) => {
       // Extract the text from the response object
       res.json({ 
         response: aiResponse.text,
-        sessionId: aiResponse.sessionId
+        sessionId: aiResponse.sessionId,
+        hasAnswer: !!answerContent
       });
     } catch (aiError) {
       console.error('AI Service Error:', aiError);
@@ -214,6 +266,90 @@ router.post('/upload', authenticate, upload.single('file'), async (req, res) => 
       msg: 'Server error during file upload', 
       error: err.message 
     });
+  }
+});
+
+// @route   POST /api/ai-tutor/upload-answer
+// @desc    Upload answer for a specific contest question
+// @access  Private
+router.post('/upload-answer', authenticate, upload.single('file'), async (req, res) => {
+  try {
+    const { contestId, questionId } = req.body;
+    
+    if (!contestId || !questionId || !req.file) {
+      return res.status(400).json({ message: 'Missing required data' });
+    }
+    
+    // Find the contest
+    const contest = await Contest.findById(contestId);
+    if (!contest) {
+      return res.status(404).json({ message: 'Contest not found' });
+    }
+    
+    // Find the question in the contest
+    const questionIndex = contest.questions.findIndex(q => q.questionId === questionId);
+    if (questionIndex === -1) {
+      return res.status(404).json({ message: 'Question not found in this contest' });
+    }
+    
+    // Update the question with answer file info
+    contest.questions[questionIndex].answerPath = req.file.location;
+    contest.questions[questionIndex].answerS3Key = req.file.key;
+    
+    await contest.save();
+    
+    res.json({ message: 'Answer uploaded successfully' });
+  } catch (error) {
+    console.error('Error uploading answer:', error.message);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Configure multer for multiple file uploads
+const uploadMultiple = upload.fields([
+  { name: 'questionFile', maxCount: 1 },
+  { name: 'answerFile', maxCount: 1 }
+]);
+
+// @route   POST /api/ai-tutor/add-question/:contestId
+// @desc    Add a question with answer to a contest
+// @access  Private
+router.post('/add-question/:contestId', authenticate, uploadMultiple, async (req, res) => {
+  try {
+    const { contestId } = req.params;
+    const { questionId, title } = req.body;
+    
+    if (!questionId || !title) {
+      return res.status(400).json({ msg: 'Question ID and title are required' });
+    }
+
+    if (!req.files?.questionFile?.[0] || !req.files?.answerFile?.[0]) {
+      return res.status(400).json({ msg: 'Both question and answer files are required' });
+    }
+
+    const contest = await Contest.findById(contestId);
+    if (!contest) {
+      return res.status(404).json({ msg: 'Contest not found' });
+    }
+
+    const questionFile = req.files.questionFile[0];
+    const answerFile = req.files.answerFile[0];
+
+    // Add new question
+    contest.questions.push({ 
+      questionId, 
+      title,
+      filePath: questionFile.location,
+      s3Key: questionFile.key,
+      answerPath: answerFile.location,
+      answerS3Key: answerFile.key
+    });
+
+    await contest.save();
+    res.json({ msg: 'Question added successfully' });
+  } catch (err) {
+    console.error('Error adding question:', err.message);
+    res.status(500).json({ msg: 'Server error', error: err.message });
   }
 });
 

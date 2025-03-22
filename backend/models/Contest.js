@@ -49,10 +49,16 @@ const ContestSchema = new mongoose.Schema({
     sparse: true  // Allow null/undefined values
   },
   questions: [{
-    questionId: { type: String, required: true },
+    questionId: { 
+      type: String, 
+      required: true,
+      default: () => `q_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+    },
     title: { type: String, required: true },
     filePath: { type: String },
     s3Key: { type: String },
+    answerPath: { type: String },
+    answerS3Key: { type: String },
   }],
   videoId: {
     type: String,
