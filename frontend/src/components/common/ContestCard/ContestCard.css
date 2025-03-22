@@ -1,16 +1,21 @@
 .contest-card {
-  background: var(--card-bg);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0.1));
   border-radius: 12px;
   padding: 20px;
   margin-bottom: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
   flex-direction: column;
   transition: transform 0.2s ease;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
 }
 
 .contest-card:hover {
-  transform: translateY(-2px);
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 8px 35px rgba(0, 0, 0, 0.25);
+  border-color: rgba(255, 255, 255, 0.1);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(0, 0, 0, 0.15));
 }
 
 .contest-header {
@@ -26,6 +31,9 @@
   font-size: 12px;
   font-weight: 600;
   color: white;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+  backdrop-filter: blur(5px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 /* Platform colors */
@@ -36,29 +44,47 @@
 
 /* Videos button styling */
 .videos-link {
-  background: #4a5568;
+  background: linear-gradient(135deg, #2d3748, #1a202c);
   color: white;
   cursor: pointer;
   border: none;
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  text-align: center;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(5px);
 }
 
 .videos-link:hover {
-  background: #2d3748;
+  opacity: 1;
+  transform: translateY(-2px);
+  background: rgba(0, 0, 0, 0.4);
 }
 
 /* Tutor button styling */
 .tutor-link {
-  background: #6c5ce7;
+  background: linear-gradient(135deg, #2c5282, #1a365d);
   color: white;
   cursor: pointer;
   border: none;
   display: inline-flex;
   align-items: center;
   gap: 5px;
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  text-align: center;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(5px);
 }
 
 .tutor-link:hover {
-  background: #5649c0;
+  opacity: 1;
+  transform: translateY(-2px);
+  background: rgba(0, 0, 0, 0.4);
 }
 
 .tutor-link svg {
@@ -116,38 +142,54 @@
 
 .contest-links {
   display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
+  gap: 8px;
+  flex-wrap: nowrap;
+  margin-top: auto;
 }
 
 .contest-link,
 .youtube-link,
-.calendar-link {
-  padding: 8px 16px;
-  border-radius: 8px;
-  text-decoration: none;
-  font-weight: 500;
-  font-size: 0.9rem;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: opacity 0.2s ease;
+.calendar-link,
+.videos-link,
+.tutor-link {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  text-align: center;
+  transition: all 0.2s ease;
+  border: none;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.2));
+  color: #fff;
+  backdrop-filter: blur(5px);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.contest-link {
-  background: var(--primary-color);
-  color: white;
+/* Modern hover effects */
+.contest-link:hover,
+.youtube-link:hover,
+.calendar-link:hover,
+.videos-link:hover,
+.tutor-link:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+  background: rgba(0, 0, 0, 0.4);
+  filter: brightness(1.2);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
-.youtube-link {
-  background: #ff0000;
-  color: white;
+/* Update specific button colors */
+.contest-link { 
+  background: linear-gradient(135deg, #2d3748, #1a202c);
 }
-
-.calendar-link {
+.youtube-link { 
+  background: linear-gradient(135deg, #c53030, #822727);
+}
+.calendar-link { 
+  background: linear-gradient(135deg, rgba(52, 211, 153, 0.15), rgba(52, 211, 153, 0.05));
   color: #34d399;
-  background: rgba(52, 211, 153, 0.1);
-  border: 1px solid currentColor;
+  border: 1px solid rgba(52, 211, 153, 0.2);
 }
 
 .contest-link:hover,
@@ -162,13 +204,12 @@
   }
 
   .contest-links {
-    flex-direction: column;
+    flex-wrap: wrap;
   }
 
   .contest-link,
   .youtube-link,
   .calendar-link {
-    width: 100%;
-    justify-content: center;
+    flex: 1 1 auto;
   }
 }
