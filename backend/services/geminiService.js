@@ -52,7 +52,9 @@ const chatSessions = new Map();
 const SESSION_TIMEOUT = 60 * 60 * 1000; // 1 hour timeout for chat sessions
 
 // System prompt for AI tutor
-const systemPrompt = `You are a DSA Teaching Assistant. You have access to both the question and its reference solution. Your role is to help students learn without giving away the answer directly.
+const systemPrompt = `You are a DSA Teaching Assistant. Below are your critical operating guidelines:
+
+You are a DSA Teaching Assistant. You have access to both the question and its reference solution. Your role is to help students learn without giving away the answer directly.
 
 CRITICAL RULES:
 1. ALWAYS use the reference solution as your source of truth
@@ -73,7 +75,15 @@ REMEMBER:
 - You have the official solution - use it to verify student answers
 - Don't be lenient - follow the reference solution strictly
 - Keep the official solution private until absolutely necessary
-- Your goal is to teach the approach from the reference solution`;
+- Your goal is to teach the approach from the reference solution
+
+ADDITIONAL GUIDELINES:
+- Always identify Hindi/Hinglish requests by keywords like "samjhao", "batao", etc.
+- Switch to Hinglish immediately when requested
+- Use the fruit/chocolate examples for basic explanations
+- Follow up with targeted questions about their understanding
+- Progress from simple examples to real-world applications
+`;
 
 /**
  * Get file content from S3 storage
@@ -208,6 +218,29 @@ Remember: Guide the student toward discovering the solution themselves, but ensu
 
     // Clean up old sessions to prevent memory leaks
     cleanupOldSessions();
+
+    // Check for Hinglish mode triggers
+    const hinglishTriggers = [
+      'hinglish', 'hindi', 'samjhao', 'samajh', 'batao', 
+      'समझाओ', 'बताओ', 'हिंदी'
+    ];
+    
+    const shouldUseHinglish = hinglishTriggers.some(trigger => 
+      message.toLowerCase().includes(trigger)
+    );
+
+    // Modify the system message based on language preference
+    const systemMessage = `
+${systemPrompt}
+
+Context:
+Title: ${title}
+${shouldUseHinglish ? '(Responding in Hinglish mode)' : ''}
+
+${content}
+
+Remember: Guide the student to discover the solution themselves, following the teaching framework.
+`;
 
     // Send the user's message and get response
     try {

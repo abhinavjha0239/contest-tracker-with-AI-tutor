@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import axios from 'axios';
 import './ContestQuestions.css';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import QuestionChat from '../../components/QuestionChat';
-import { FaUpload, FaPlusCircle } from 'react-icons/fa';
+import { FaUpload, FaPlusCircle, FaArrowLeft } from 'react-icons/fa';
 
 const ContestQuestions = () => {
   const { contestId } = useParams();
+  const history = useHistory();
   const [questions, setQuestions] = useState([]);
   const [selectedQuestion, setSelectedQuestion] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -254,6 +255,10 @@ const ContestQuestions = () => {
     }
   };
 
+  const handleBack = () => {
+    history.goBack();
+  };
+
   if (loading) return <LoadingSpinner />;
   if (error) return (
     <div className="error-container">
@@ -268,147 +273,152 @@ const ContestQuestions = () => {
   );
 
   return (
-    <div className="contest-questions-container">
-      <div className="questions-sidebar">
-        <h2>Questions</h2>
-        {contestInfo && <p className="contest-name">{contestInfo.name}</p>}
-        
-        {/* Always show upload section at the top */}
-        <div className="upload-section">
-          <button 
-            className="action-button add-question-button"
-            onClick={() => setShowNewQuestionModal(true)}
-          >
-            <FaPlusCircle /> Add Question
-          </button>
-        </div>
-        
-        <div className="questions-list">
-          {questions.length > 0 ? (
-            questions.map(question => (
-              <div
-                key={question.questionId || question._id}
-                className={`question-item ${
-                  selectedQuestion?.questionId === question.questionId ? 'active' : ''
-                }`}
-                onClick={() => handleQuestionSelect(question)}
-              >
-                {question.title}
+    <>
+      <button className="back-button" onClick={handleBack}>
+        <FaArrowLeft /> Back to Contest
+      </button>
+      <div className="contest-questions-container">
+        <div className="questions-sidebar">
+          <h2>Questions</h2>
+          {contestInfo && <p className="contest-name">{contestInfo.name}</p>}
+          
+          {/* Always show upload section at the top */}
+          <div className="upload-section">
+            <button 
+              className="action-button add-question-button"
+              onClick={() => setShowNewQuestionModal(true)}
+            >
+              <FaPlusCircle /> Add Question
+            </button>
+          </div>
+          
+          <div className="questions-list">
+            {questions.length > 0 ? (
+              questions.map(question => (
+                <div
+                  key={question.questionId || question._id}
+                  className={`question-item ${
+                    selectedQuestion?.questionId === question.questionId ? 'active' : ''
+                  }`}
+                  onClick={() => handleQuestionSelect(question)}
+                >
+                  {question.title}
+                </div>
+              ))
+            ) : (
+              <div className="no-questions-message">
+                No questions available. Click "Add Question" to create one.
               </div>
-            ))
+            )}
+          </div>
+        </div>
+
+        <div className="question-content">
+          {selectedQuestion ? (
+            <QuestionChat 
+              contestId={contestId}
+              question={selectedQuestion}
+              key={selectedQuestion.questionId} // Add key to force re-render on question change
+            />
           ) : (
-            <div className="no-questions-message">
-              No questions available. Click "Add Question" to create one.
+            <div className="no-question-selected">
+              {questions.length > 0 ? (
+                "Select a question to start chatting with the AI Tutor"
+              ) : (
+                "Add a question to get started with the AI Tutor"
+              )}
             </div>
           )}
         </div>
-      </div>
 
-      <div className="question-content">
-        {selectedQuestion ? (
-          <QuestionChat 
-            contestId={contestId}
-            question={selectedQuestion}
-            key={selectedQuestion.questionId} // Add key to force re-render on question change
-          />
-        ) : (
-          <div className="no-question-selected">
-            {questions.length > 0 ? (
-              "Select a question to start chatting with the AI Tutor"
-            ) : (
-              "Add a question to get started with the AI Tutor"
-            )}
-          </div>
-        )}
-      </div>
-
-      {/* Upload Answer Modal */}
-      {showUploadModal && (
-        <div className="modal-overlay">
-          <div className="upload-modal">
-            <h3>Upload Answer for {selectedQuestion?.title}</h3>
-            <div className="upload-form">
-              <input type="file" onChange={handleFileChange} accept=".txt,.java,.cpp,.py,.js,.c,.cs" />
-              {uploadError && <div className="error-message">{uploadError}</div>}
-              <div className="modal-actions">
-                <button 
-                  className="cancel-button" 
-                  onClick={() => setShowUploadModal(false)}
-                >
-                  Cancel
-                </button>
-                <button 
-                  className="upload-submit-button" 
-                  onClick={handleUploadAnswer}
-                  disabled={!answerFile || uploadLoading}
-                >
-                  {uploadLoading ? 'Uploading...' : 'Upload'}
-                </button>
+        {/* Upload Answer Modal */}
+        {showUploadModal && (
+          <div className="modal-overlay">
+            <div className="upload-modal">
+              <h3>Upload Answer for {selectedQuestion?.title}</h3>
+              <div className="upload-form">
+                <input type="file" onChange={handleFileChange} accept=".txt,.java,.cpp,.py,.js,.c,.cs" />
+                {uploadError && <div className="error-message">{uploadError}</div>}
+                <div className="modal-actions">
+                  <button 
+                    className="cancel-button" 
+                    onClick={() => setShowUploadModal(false)}
+                  >
+                    Cancel
+                  </button>
+                  <button 
+                    className="upload-submit-button" 
+                    onClick={handleUploadAnswer}
+                    disabled={!answerFile || uploadLoading}
+                  >
+                    {uploadLoading ? 'Uploading...' : 'Upload'}
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Add New Question Modal */}
-      {showNewQuestionModal && (
-        <div className="modal-overlay">
-          <div className="upload-modal">
-            <h3>Add New Question</h3>
-            <form className="upload-form" onSubmit={handleAddNewQuestion}>
-              <div className="form-group">
-                <label htmlFor="question-title">Question Title:</label>
-                <input 
-                  id="question-title"
-                  type="text" 
-                  value={newQuestionTitle}
-                  onChange={(e) => setNewQuestionTitle(e.target.value)}
-                  placeholder="Enter question title"
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="question-file">Question File (Required):</label>
-                <input 
-                  id="question-file"
-                  type="file" 
-                  onChange={handleNewQuestionFileChange} 
-                  accept=".txt,.java,.cpp,.py,.js,.c,.cs,.pdf"
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="answer-file">Answer File (Required):</label>
-                <input 
-                  id="answer-file"
-                  type="file" 
-                  onChange={handleAnswerFileChange} 
-                  accept=".txt,.java,.cpp,.py,.js,.c,.cs"
-                  required
-                />
-              </div>
-              {uploadError && <div className="error-message">{uploadError}</div>}
-              <div className="modal-actions">
-                <button 
-                  type="button"
-                  className="cancel-button" 
-                  onClick={() => setShowNewQuestionModal(false)}
-                >
-                  Cancel
-                </button>
-                <button 
-                  type="submit"
-                  className="upload-submit-button" 
-                  disabled={!newQuestionTitle || !newQuestionFile || !newQuestionAnswer || uploadLoading}
-                >
-                  {uploadLoading ? 'Adding...' : 'Add Question'}
-                </button>
-              </div>
-            </form>
+        {/* Add New Question Modal */}
+        {showNewQuestionModal && (
+          <div className="modal-overlay">
+            <div className="upload-modal">
+              <h3>Add New Question</h3>
+              <form className="upload-form" onSubmit={handleAddNewQuestion}>
+                <div className="form-group">
+                  <label htmlFor="question-title">Question Title:</label>
+                  <input 
+                    id="question-title"
+                    type="text" 
+                    value={newQuestionTitle}
+                    onChange={(e) => setNewQuestionTitle(e.target.value)}
+                    placeholder="Enter question title"
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="question-file">Question File (Required):</label>
+                  <input 
+                    id="question-file"
+                    type="file" 
+                    onChange={handleNewQuestionFileChange} 
+                    accept=".txt,.java,.cpp,.py,.js,.c,.cs,.pdf"
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="answer-file">Answer File (Required):</label>
+                  <input 
+                    id="answer-file"
+                    type="file" 
+                    onChange={handleAnswerFileChange} 
+                    accept=".txt,.java,.cpp,.py,.js,.c,.cs"
+                    required
+                  />
+                </div>
+                {uploadError && <div className="error-message">{uploadError}</div>}
+                <div className="modal-actions">
+                  <button 
+                    type="button"
+                    className="cancel-button" 
+                    onClick={() => setShowNewQuestionModal(false)}
+                  >
+                    Cancel
+                  </button>
+                  <button 
+                    type="submit"
+                    className="upload-submit-button" 
+                    disabled={!newQuestionTitle || !newQuestionFile || !newQuestionAnswer || uploadLoading}
+                  >
+                    {uploadLoading ? 'Adding...' : 'Add Question'}
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </>
   );
 };
 
