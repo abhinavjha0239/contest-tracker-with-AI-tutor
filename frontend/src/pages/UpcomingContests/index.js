@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ContestList from '../../components/common/ContestList';
 import PlatformFilters from '../../components/common/PlatformFilters';
+import PlatformSubscriptions from '../../components/common/PlatformSubscriptions';
 import { getEnabledPlatforms } from '../../utils/platforms';
+import './styles.css'; // We'll create this
 
 const UpcomingContests = ({ isAuthenticated }) => {
   const [contests, setContests] = useState([]);
@@ -49,14 +51,17 @@ const UpcomingContests = ({ isAuthenticated }) => {
 
   return (
     <div className="contests-container">
-      <PlatformFilters platforms={platforms} setPlatforms={setPlatforms} />
+      <div className="contests-header">
+        <PlatformFilters platforms={platforms} setPlatforms={setPlatforms} />
+        {isAuthenticated && <PlatformSubscriptions />}
+      </div>
+      {error && <div className="error-message">{error}</div>}
       <ContestList
         contests={contests}
         type="upcoming"
         isAuthenticated={isAuthenticated}
         toggleBookmark={toggleBookmark}
         loading={loading}
-        error={error}
       />
     </div>
   );

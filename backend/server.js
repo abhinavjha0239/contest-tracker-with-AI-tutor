@@ -9,6 +9,7 @@ const Contest = require('./models/Contest');
 const { platforms, getPlatformByResourceId } = require('./config/platforms');
 const youtubeService = require('./services/youtubeService');
 const { authenticate } = require('./middleware/auth'); // Add this import
+const PlatformSubscription = require('./models/PlatformSubscription');
 
 // Connect to database
 connectDB();
@@ -176,7 +177,43 @@ const fetchContests = async () => {
         }
         await Contest.findByIdAndUpdate(existing._id, contestData);
       } else {
-        await new Contest(contestData).save();
+        const newContest = await new Contest(contestData).save();
+        
+        // Auto-add to calendar for subscribed users
+        const subscriptions = await PlatformSubscription.find({ platform: platform.name });
+        for (const sub of subscriptions) {
+          try {
+            const event = {
+              summary: `${newContest.platform} - ${newContest.name}`,
+              description: `Contest Link: ${newContest.url}\nPlatform: ${newContest.platform}`,
+              start: {
+                dateTime: newContest.startTime,
+                timeZone: 'Asia/Kolkata'
+              },
+              end: {
+                dateTime: newContest.endTime,
+                timeZone: 'Asia/Kolkata'
+              },
+              reminders: {
+                useDefault: false,
+                overrides: [
+                  { method: 'email', minutes: 60 },
+                  { method: 'popup', minutes: 30 }
+                ]
+              }
+            };
+
+            const response = await calendar.events.insert({
+              calendarId: 'primary',
+              resource: event
+            });
+
+            newContest.calendarEventId = response.data.id;
+            await newContest.save();
+          } catch (err) {
+            console.error(`Failed to auto-add calendar event for user ${sub.user}:`, err);
+          }
+        }
       }
       
       updatedCount++;

@@ -11,6 +11,7 @@ import BookmarkedContests from './pages/BookmarkedContests';
 import ContestQuestions from './pages/ContestQuestions';
 import AITutor from './pages/AITutor';
 import ContestVideos from './pages/ContestVideos';
+import CalendarCallback from './pages/CalendarCallback';
 import './App.css';
 
 function App() {
@@ -189,6 +190,10 @@ function App() {
             
             <Route path="/contest/:contestId/videos">
               <ContestVideos />
+            </Route>
+            
+            <Route path="/calendar/callback">
+              <CalendarCallback />
             </Route>
           </Switch>
         </main>

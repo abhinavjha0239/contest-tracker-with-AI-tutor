@@ -1,0 +1,47 @@
+.contests-container {
+  padding: 20px;
+}
+
+.contests-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  margin-bottom: 20px;
+  gap: 20px;
+}
+
+.platform-subscriptions {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  min-width: 250px;
+}
+
+.platform-subscriptions h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.subscription-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.subscription-item label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.subscription-item input[type="checkbox"] {
+  cursor: pointer;
+}
+
+.error-message {
+  color: #dc3545;
+  margin-bottom: 10px;
+}

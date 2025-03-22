@@ -1,0 +1,104 @@
+.platform-subscriptions-dropdown {
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  min-width: 280px;
+}
+
+.platform-subscriptions-dropdown h3 {
+  margin: 0 0 0.5rem;
+  color: #333;
+  font-size: 1.1rem;
+}
+
+.subscription-desc {
+  color: #666;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.subscription-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.subscription-item label {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.subscription-item label:hover {
+  background-color: #f5f5f5;
+}
+
+.subscription-item label.active {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.subscription-item input[type="checkbox"] {
+  margin-right: 0.5rem;
+}
+
+.platform-name {
+  flex: 1;
+}
+
+.subscription-message {
+  background: #e3f2fd;
+  color: #1976d2;
+  padding: 0.5rem;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.subscription-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  color: #666;
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+  margin-right: 0.5rem;
+}
+
+.check {
+  color: #4caf50;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.calendar-auth {
+  text-align: center;
+  padding: 1rem;
+}
+
+.google-auth-btn {
+  background: #4285f4;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin-top: 1rem;
+}
+
+.google-auth-btn:hover {
+  background: #3367d6;
+}

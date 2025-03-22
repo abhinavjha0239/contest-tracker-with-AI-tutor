@@ -1,0 +1,34 @@
+/* ...existing styles... */
+
+.dropdown {
+  position: relative;
+}
+
+.calendar-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dropdown-content {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  margin-top: 0.5rem;
+  z-index: 1000;
+}
+
+/* Add this if you're using dark theme */
+.navbar .calendar-btn {
+  background: transparent;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  font-size: inherit;
+  padding: 0.5rem 1rem;
+}
+
+.navbar .calendar-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}

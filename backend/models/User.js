@@ -20,6 +20,14 @@ const UserSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Contest'
   }],
+  googleCalendar: {
+    accessToken: String,
+    refreshToken: String,
+    enabled: {
+      type: Boolean,
+      default: false
+    }
+  },
   createdAt: {
     type: Date,
     default: Date.now
