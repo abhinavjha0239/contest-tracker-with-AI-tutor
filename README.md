@@ -47,6 +47,10 @@ A comprehensive platform that helps competitive programmers track and learn from
   - Concept explanations
   - Common mistake detection
 
+## 🎥 Demo Video
+Check out our platform walkthrough and feature demonstration:
+[Watch Demo Video](https://drive.google.com/file/d/1mETLlBA-fFEN4hMsmE6LkUDvo49EQgK0/view?usp=drive_link)
+
 ## 🔧 Technical Architecture
 
 ### Frontend (`/frontend`)
