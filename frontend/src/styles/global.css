@@ -17,6 +17,7 @@
   --hover-color: rgba(26, 115, 232, 0.1);
   --glow-color: rgba(26, 115, 232, 0.4);
   --button-gradient: linear-gradient(135deg, #1a73e8, #0d47a1);
+  --button-border-radius: 8px;  /* Standard border radius for buttons */
 }
 
 /* Dark mode overrides */
@@ -166,6 +167,16 @@ button {
   position: relative;
   overflow: hidden;
   z-index: 1;
+  padding: 8px 16px;
+  border-radius: var(--button-border-radius);
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  line-height: 1.5;
 }
 
 /* Fix the shimmer effect to use more stable positioning */
@@ -180,6 +191,11 @@ button::before {
   transition: 0.5s;
   z-index: -1;
   pointer-events: none; /* Prevent interaction with pseudo-element */
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 button:hover::before {

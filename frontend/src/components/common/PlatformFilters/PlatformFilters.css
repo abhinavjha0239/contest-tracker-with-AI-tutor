@@ -24,19 +24,24 @@
   background: none;
   border: none;
   color: var(--text-secondary);
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.05);
 }
 
 .toggle-btn:hover {
   background: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+}
+
+.toggle-btn:active {
+  transform: scale(0.95);
 }
 
 .toggle-btn.open {
@@ -96,23 +101,39 @@
 .filter-action-btn {
   padding: 8px 16px;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
+  border-radius: 8px;
   background: rgba(255, 255, 255, 0.05);
   color: var(--text-primary);
   font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  display: flex;
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
+  min-height: 38px;
+  min-width: 100px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  line-height: 1.4;
 }
 
 .filter-action-btn:hover {
   background: var(--primary-color);
   color: white;
   border-color: var(--primary-color);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.filter-action-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.filter-action-btn svg {
+  font-size: 1rem;
 }
 
 .platform-filters-list {
@@ -123,22 +144,27 @@
 
 .platform-checkbox {
   position: relative;
-  padding: 10px 20px;
+  padding: 10px 16px;
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 14px;
+  border-radius: 12px;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   align-items: center;
   gap: 12px;
   min-width: 160px;
+  min-height: 44px;
 }
 
 .platform-checkbox:hover {
   background: rgba(var(--primary-color-rgb), 0.1);
   border-color: var(--platform-color);
   transform: translateY(-2px);
+}
+
+.platform-checkbox:active {
+  transform: translateY(0);
 }
 
 /* Better checkbox display */

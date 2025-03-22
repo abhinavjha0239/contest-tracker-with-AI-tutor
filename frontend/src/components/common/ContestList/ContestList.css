@@ -23,6 +23,7 @@
   width: 40px;
   height: 40px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .view-toggle button:hover {
@@ -35,6 +36,7 @@
 .view-toggle button.active {
   background: var(--primary-color);
   color: white;
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .contest-list {
@@ -67,11 +69,17 @@
 .pagination button {
   padding: 8px 16px;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   background-color: var(--primary-color);
   color: white;
   cursor: pointer;
-  transition: var(--transition);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  font-weight: 500;
+  min-width: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .pagination button:disabled {
