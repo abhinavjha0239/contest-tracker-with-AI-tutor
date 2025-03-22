@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { getEnabledPlatforms } from '../../utils/platforms';
-import { FaCheck, FaSpinner } from 'react-icons/fa';
+import { FaCheck, FaSpinner, FaGoogle } from 'react-icons/fa';
 import './PlatformSubscriptions.css';
 
-const PlatformSubscriptions = ({ onClose }) => {
+const PlatformSubscriptions = () => {
   const [subscriptions, setSubscriptions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState({});
@@ -94,18 +94,16 @@ const PlatformSubscriptions = ({ onClose }) => {
   );
 
   return (
-    <div className="platform-subscriptions-dropdown">
-      <h3>Calendar Notifications</h3>
+    <div className="platform-subscriptions-container">
       {!calendarEnabled ? (
         <div className="calendar-auth">
-          <p>Connect your Google Calendar to enable automatic reminders</p>
+          <p>Connect Google Calendar for reminders</p>
           <button onClick={handleGoogleAuth} className="google-auth-btn">
-            Connect Google Calendar
+            <FaGoogle /> Connect Calendar
           </button>
         </div>
       ) : (
         <>
-          <p className="subscription-desc">Get calendar reminders for:</p>
           {message && <div className="subscription-message">{message}</div>}
           <div className="subscription-list">
             {getEnabledPlatforms().map(platform => (

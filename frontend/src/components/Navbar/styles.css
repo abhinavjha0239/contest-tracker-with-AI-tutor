@@ -7,28 +7,48 @@
 .calendar-btn {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.calendar-btn.active {
+  background: var(--bg-secondary);
+  border-color: var(--primary-color);
+  color: var(--primary-color);
 }
 
 .dropdown-content {
   position: absolute;
   right: 0;
   top: 100%;
-  margin-top: 0.5rem;
+  margin-top: 0.75rem;
   z-index: 1000;
+  animation: dropdownFade 0.2s ease;
 }
 
-/* Add this if you're using dark theme */
+@keyframes dropdownFade {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Dark mode styles */
 .navbar .calendar-btn {
   background: transparent;
-  border: none;
-  color: inherit;
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
   cursor: pointer;
   font-size: inherit;
-  padding: 0.5rem 1rem;
 }
 
 .navbar .calendar-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
+  background: var(--bg-secondary);
+  border-color: var(--primary-color);
 }

@@ -1,21 +1,23 @@
 .platform-subscriptions-dropdown {
-  background: white;
-  padding: 1rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  min-width: 280px;
+  background: var(--bg-primary);
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  min-width: 320px;
+  border: 1px solid var(--border-color);
 }
 
 .platform-subscriptions-dropdown h3 {
-  margin: 0 0 0.5rem;
-  color: #333;
-  font-size: 1.1rem;
+  margin: 0 0 1rem;
+  color: var(--text-primary);
+  font-size: 1.2rem;
+  font-weight: 600;
 }
 
 .subscription-desc {
-  color: #666;
-  font-size: 0.9rem;
-  margin-bottom: 1rem;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin-bottom: 1.2rem;
 }
 
 .subscription-list {
@@ -27,78 +29,146 @@
 .subscription-item label {
   display: flex;
   align-items: center;
-  padding: 0.5rem;
-  border-radius: 4px;
+  padding: 0.75rem;
+  border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.2s ease;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
 }
 
 .subscription-item label:hover {
-  background-color: #f5f5f5;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-color: var(--primary-color);
 }
 
 .subscription-item label.active {
-  background-color: #e3f2fd;
-  color: #1976d2;
+  background: var(--primary-light);
+  border-color: var(--primary-color);
+  color: var(--primary-color);
 }
 
 .subscription-item input[type="checkbox"] {
-  margin-right: 0.5rem;
+  margin-right: 0.75rem;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--primary-color);
 }
 
 .platform-name {
   flex: 1;
+  font-weight: 500;
 }
 
 .subscription-message {
-  background: #e3f2fd;
-  color: #1976d2;
-  padding: 0.5rem;
-  border-radius: 4px;
-  margin-bottom: 0.5rem;
+  background: var(--primary-light);
+  color: var(--primary-color);
+  padding: 0.75rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
   font-size: 0.9rem;
   text-align: center;
+  border: 1px solid var(--primary-color);
 }
 
 .subscription-loading {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
-  color: #666;
+  padding: 1rem;
+  color: var(--text-secondary);
 }
 
 .spin {
   animation: spin 1s linear infinite;
   margin-right: 0.5rem;
+  color: var(--primary-color);
 }
 
 .check {
-  color: #4caf50;
+  color: var(--success-color);
 }
 
 @keyframes spin {
-  100% {
-    transform: rotate(360deg);
-  }
+  100% { transform: rotate(360deg); }
 }
 
 .calendar-auth {
-  text-align: center;
   padding: 1rem;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  text-align: center;
+  border: 1px solid var(--border-color);
+}
+
+.calendar-auth p {
+  margin-bottom: 1rem;
 }
 
 .google-auth-btn {
-  background: #4285f4;
+  background: var(--primary-color);
   color: white;
   border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 0.9rem;
-  margin-top: 1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .google-auth-btn:hover {
-  background: #3367d6;
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.dropdown-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.close-btn:hover {
+  color: var(--text-primary);
+  background: var(--bg-primary);
+}
+
+/* Update dropdown animation */
+.dropdown-content {
+  transform-origin: top right;
+  animation: dropdownFade 0.2s ease;
+}
+
+@keyframes dropdownFade {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.platform-subscriptions-container {
+  width: 100%;
 }

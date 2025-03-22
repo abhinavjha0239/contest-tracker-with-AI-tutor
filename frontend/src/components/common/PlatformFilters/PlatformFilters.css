@@ -43,6 +43,7 @@
   transform: rotate(-180deg);
 }
 
+/* Fix overflow issues */
 .platform-filters-content {
   max-height: 0;
   overflow: hidden;
@@ -54,7 +55,7 @@
 }
 
 .platform-filters-container.open .platform-filters-content {
-  max-height: 500px;
+  max-height: 800px; /* Increased to accommodate more platforms */
   opacity: 1;
   margin-top: 24px;
 }
@@ -140,6 +141,7 @@
   transform: translateY(-2px);
 }
 
+/* Better checkbox display */
 .platform-checkbox input[type="checkbox"] {
   appearance: none;
   -webkit-appearance: none;
@@ -151,6 +153,9 @@
   cursor: pointer;
   position: relative;
   transition: all 0.2s ease;
+  flex-shrink: 0;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .platform-checkbox input[type="checkbox"]:checked {

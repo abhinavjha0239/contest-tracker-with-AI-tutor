@@ -3,8 +3,9 @@ import { FaFilter, FaCheck, FaTimes, FaChevronDown } from 'react-icons/fa';
 import './PlatformFilters.css';
 import { getEnabledPlatforms } from '../../../utils/platforms';
 
-const PlatformFilters = ({ platforms, setPlatforms }) => {
-  const [isOpen, setIsOpen] = useState(false);
+const PlatformFilters = ({ platforms, setPlatforms, hideHeader = false }) => {
+  // Change default state to true so it's open by default
+  const [isOpen, setIsOpen] = useState(true);
   const enabledPlatforms = getEnabledPlatforms();
 
   const handleSelectAll = () => {
@@ -15,15 +16,27 @@ const PlatformFilters = ({ platforms, setPlatforms }) => {
     setPlatforms([]);
   };
 
+  const handleTogglePlatform = (platform) => {
+    if (platforms.includes(platform)) {
+      setPlatforms(platforms.filter(p => p !== platform));
+    } else {
+      setPlatforms([...platforms, platform]);
+    }
+  };
+
   return (
-    <div className={`platform-filters-container ${isOpen ? 'open' : ''}`}>
+    <div className={`platform-filters-container ${isOpen || hideHeader ? 'open' : ''}`}>
       <div className="platform-filters-toggle" onClick={() => setIsOpen(!isOpen)}>
-        <h3>
-          <FaFilter /> Filter Platforms
-        </h3>
-        <button className={`toggle-btn ${isOpen ? 'open' : ''}`}>
-          <FaChevronDown />
-        </button>
+        {!hideHeader && (
+          <h3>
+            <FaFilter /> Filter Platforms
+          </h3>
+        )}
+        {!hideHeader && (
+          <button className={`toggle-btn ${isOpen ? 'open' : ''}`}>
+            <FaChevronDown />
+          </button>
+        )}
       </div>
       
       <div className="platform-filters-content">
@@ -52,13 +65,7 @@ const PlatformFilters = ({ platforms, setPlatforms }) => {
               <input
                 type="checkbox"
                 checked={platforms.includes(platform.name)}
-                onChange={e => {
-                  if (e.target.checked) {
-                    setPlatforms([...platforms, platform.name]);
-                  } else {
-                    setPlatforms(platforms.filter(p => p !== platform.name));
-                  }
-                }}
+                onChange={() => handleTogglePlatform(platform.name)}
               />
               <span className="platform-name">{platform.displayName}</span>
             </label>
